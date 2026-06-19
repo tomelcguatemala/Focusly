@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Focusly</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<meta name="theme-color" content="#F7F3EA" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Focusly" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#F4F7F3;--bg2:#F8F1E6;--surface:rgba(255,255,255,.62);--surface2:rgba(246,250,248,.54);
+  --ink:#16313A;--text:#26383E;--muted:#697D82;--accent:#7BA56F;--accent2:#C59B57;--accent3:#B999D6;
+  --line:rgba(24,49,58,.12);--shadow:0 18px 55px rgba(32,62,68,.12);--softShadow:0 12px 32px rgba(32,62,68,.08);
+  --blur:blur(26px) saturate(1.15);--radius:26px;--radius-sm:18px;--body:Manrope,Inter,system-ui,sans-serif;
+}
+body.dark{--bg:#121A20;--bg2:#1B252B;--surface:rgba(34,45,54,.72);--surface2:rgba(24,34,42,.70);--ink:#F5F2E9;--text:#EFF3F2;--muted:#BBC8C8;--accent:#A7C890;--accent2:#E3C27C;--accent3:#C7A2E8;--line:rgba(255,255,255,.13);--shadow:0 22px 70px rgba(0,0,0,.35);--softShadow:0 12px 32px rgba(0,0,0,.25)}
+body.theme-ivory{--bg:#F4F7F3;--bg2:#F8F1E6;--accent:#7BA56F;--accent2:#C59B57;--accent3:#B999D6;--ink:#16313A}
+body.theme-ocean{--bg:#EDF7FA;--bg2:#F4F2EA;--accent:#5D9EAF;--accent2:#7BA56F;--accent3:#A5B8E8;--ink:#123847}
+body.theme-forest{--bg:#EEF6EA;--bg2:#FAF1E4;--accent:#678F5B;--accent2:#B68E52;--accent3:#C4A6D9;--ink:#173F2D}
+body.theme-graphite{--bg:#ECEBE7;--bg2:#F6F0E8;--accent:#5D646B;--accent2:#BC9550;--accent3:#9584C8;--ink:#242D32}
+body.theme-aurora{--bg:#F4F0FB;--bg2:#EEF8F5;--accent:#8A76D4;--accent2:#77A977;--accent3:#E5A7CE;--ink:#28304A}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:var(--body);color:var(--text);background:linear-gradient(135deg,var(--bg),var(--bg2));font-size:15px}body{overflow-x:hidden}body:before{content:"";position:fixed;inset:-15%;z-index:-2;background:radial-gradient(circle at 12% 10%,color-mix(in srgb,var(--accent) 28%,transparent),transparent 28%),radial-gradient(circle at 88% 18%,color-mix(in srgb,var(--accent2) 18%,transparent),transparent 28%),radial-gradient(circle at 72% 86%,color-mix(in srgb,var(--accent3) 16%,transparent),transparent 30%);filter:blur(20px);opacity:.82}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;transition:transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease, background .18s ease, opacity .18s ease}button:hover{transform:translateY(-2px);box-shadow:0 14px 34px color-mix(in srgb,var(--accent) 18%,transparent)}button:active{transform:scale(.97)}.app{width:min(1080px,100%);margin:auto;padding:20px clamp(16px,4vw,38px) 42px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.menu,.ghost{background:rgba(255,255,255,.18);color:var(--ink);font-size:24px;padding:9px 12px;border-radius:16px;border:1px solid transparent}.brand{margin:10px 0 22px;padding:18px 2px}.greeting{font-size:clamp(15px,2vw,18px);font-weight:600;color:var(--text);letter-spacing:-.2px}.logo{font-size:clamp(48px,7vw,72px);line-height:.9;letter-spacing:-3.4px;font-weight:800;color:var(--ink)}.tag{color:var(--accent);font-weight:700;font-size:clamp(16px,2.1vw,20px);margin-top:8px}.grid{display:grid;gap:16px}.home-grid{grid-template-columns:1fr}.card{background:linear-gradient(145deg,var(--surface),var(--surface2));border:1px solid var(--line);box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.38);border-radius:var(--radius);backdrop-filter:var(--blur);padding:20px}.card h2,.card h3{margin:0;color:var(--ink);font-weight:800;letter-spacing:-.5px}.screen{display:none}.screen.active{display:block;animation:screenIn .25s ease}@keyframes screenIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.verse{display:grid;grid-template-columns:58px 1fr;gap:16px;align-items:center}.bubble{width:52px;height:52px;border-radius:18px;background:color-mix(in srgb,var(--accent) 12%,rgba(255,255,255,.75));display:grid;place-items:center;font-size:23px}.verse p,.weather p{margin:7px 0;color:var(--text);font-size:clamp(14px,1.7vw,16px);line-height:1.45}.ref{color:var(--accent);font-weight:800}.weather{position:relative;overflow:hidden;min-height:126px}.weather:after{content:"";position:absolute;width:150px;height:150px;right:-55px;bottom:-65px;background:radial-gradient(circle,color-mix(in srgb,var(--accent2) 25%,transparent),transparent 68%);filter:blur(10px)}.weather .icon{position:absolute;right:23px;top:50%;transform:translateY(-50%);font-size:34px;opacity:.68}.weather small{display:block;color:var(--muted);font-weight:700;margin-top:10px}.experience{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini{padding:15px;border-radius:20px;background:rgba(255,255,255,.32);border:1px solid var(--line)}.mini strong{display:block;color:var(--ink);font-size:20px}.mini span{color:var(--muted);font-weight:700;font-size:13px}.title{text-align:center;margin:4px 0 22px}.title h1{font-size:clamp(36px,5vw,52px);line-height:.95;margin:0;color:var(--ink);font-weight:800;letter-spacing:-2.2px}.title p{color:var(--accent);font-weight:700;font-size:18px}.calendar-head{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:18px auto;max-width:760px}.round{width:52px;height:52px;border-radius:18px;background:var(--surface);border:1px solid var(--line);color:var(--ink);font-size:28px}.month-title{text-align:center;font-size:clamp(27px,4vw,40px);font-weight:800;color:var(--ink);letter-spacing:-1px}.week,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;max-width:900px;margin:auto}.week{margin-bottom:8px;text-align:center;color:var(--ink);font-weight:800}.day{min-height:92px;border-radius:18px;background:rgba(255,255,255,.38);border:1px solid var(--line);padding:10px;text-align:center;color:var(--text);position:relative}.day.blank{visibility:hidden}.day.today{outline:2px solid var(--accent)}.day.selected{background:color-mix(in srgb,var(--accent) 17%,rgba(255,255,255,.55))}.day b{font-size:18px;color:var(--ink)}.day small{display:block;color:var(--muted);font-weight:700;font-size:12px}.dot{width:7px;height:7px;border-radius:99px;background:var(--accent);margin:5px auto}.holiday{font-size:10px!important;color:var(--accent2)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.birthday{background:linear-gradient(145deg,color-mix(in srgb,var(--accent3) 28%,white),rgba(255,255,255,.5))!important}.day-panel{max-width:900px;margin:18px auto}.toolbar{display:flex;gap:10px;align-items:center;margin:16px 0}.toolbar input{flex:1}.btn{border-radius:16px;padding:13px 17px;background:linear-gradient(135deg,var(--ink),color-mix(in srgb,var(--ink) 82%,var(--accent)));color:white;font-weight:800;box-shadow:var(--softShadow)}.btn.secondary{background:rgba(255,255,255,.34);border:1px solid var(--line);color:var(--ink);box-shadow:none}.btn.shine{position:relative;overflow:hidden}.btn.shine:after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-120%);transition:.7s}.btn.shine:hover:after{transform:translateX(120%)}.task-list{display:grid;gap:12px}.task{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;padding:16px;border-radius:22px;border:1px solid color-mix(in srgb,var(--task,#7aa06f) 25%,var(--line));background:linear-gradient(145deg,rgba(255,255,255,.48),color-mix(in srgb,var(--task,#7aa06f) 10%,rgba(255,255,255,.55)));box-shadow:0 10px 25px rgba(20,50,55,.07)}.task .time{display:inline-flex;padding:6px 11px;border-radius:999px;background:color-mix(in srgb,var(--task,#7aa06f) 22%,rgba(255,255,255,.65));color:var(--ink);font-weight:800;font-size:12px}.task h3{margin:10px 0 8px;color:var(--ink);font-size:18px;letter-spacing:-.3px}.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{font-size:11px;font-weight:800;color:var(--muted);background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:5px 8px}.task p{margin:10px 0 0;color:var(--muted);font-size:14px}.task-actions{display:grid;grid-template-columns:repeat(5,40px);gap:6px}.task-actions button{height:38px;border-radius:13px;background:rgba(255,255,255,.50);border:1px solid var(--line);color:var(--ink)}.done h3{text-decoration:line-through;color:var(--muted)}.progressbar{height:9px;border-radius:99px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:10px}.progressbar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.inspo-grid{grid-template-columns:repeat(2,1fr)}.inspo-card{display:grid;gap:8px}.inspo-card p{font-size:16px;line-height:1.5;margin:0}.share-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}.settings-grid{display:grid;gap:16px}.profile-row{display:grid;grid-template-columns:76px 1fr auto;gap:15px;align-items:center}.avatar{width:68px;height:68px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white;font-size:30px;box-shadow:var(--softShadow)}.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.themeBtn{padding:14px;border-radius:16px;background:rgba(255,255,255,.32);border:1px solid var(--line);color:var(--ink);font-weight:800;text-align:left}.themeBtn small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.themeBtn.active{outline:2px solid var(--accent2)}.switches{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{width:100%;padding:13px 15px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.45);color:var(--text);margin:6px 0 12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}.field::placeholder{color:color-mix(in srgb,var(--muted) 70%,transparent)}input[type=color].field{height:48px;padding:6px}.drawer{position:fixed;inset:0;display:none;background:rgba(0,0,0,.28);z-index:50}.drawer.show{display:block}.drawer-panel{width:min(330px,86vw);height:100%;padding:26px;background:linear-gradient(145deg,var(--surface),var(--bg2));box-shadow:40px 0 100px rgba(0,0,0,.22);backdrop-filter:var(--blur)}.drawer-panel h2{font-size:38px;margin:0 0 20px;color:var(--ink);letter-spacing:-1.2px}.navBtn{display:block;width:100%;text-align:left;margin:8px 0;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.30);color:var(--ink);font-weight:800}.navBtn.active{background:var(--ink);color:white}.fab{position:fixed;right:clamp(18px,4vw,42px);bottom:24px;width:66px;height:66px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-size:38px;box-shadow:0 18px 45px color-mix(in srgb,var(--accent) 35%,transparent);z-index:30}.install{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);width:min(360px,calc(100% - 110px));display:none;z-index:29}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.38);z-index:100;padding:18px}.modal.show{display:flex}.sheet{width:min(560px,100%);max-height:92vh;overflow:auto;background:linear-gradient(145deg,var(--bg),var(--bg2));border:1px solid var(--line);border-radius:28px;padding:20px;box-shadow:0 40px 120px rgba(0,0,0,.32)}.sheet h2{text-align:center;color:var(--ink);margin-top:0}.preview{aspect-ratio:1/1;border-radius:24px;background:linear-gradient(145deg,#c9edf2,#91b57e);display:grid;place-items:center;padding:38px;margin:12px 0}.quoteBox{background:rgba(255,255,255,.78);border-radius:22px;padding:32px;text-align:center;color:#16313A;font-weight:800;font-size:21px}.quoteBox small{display:block;margin-top:18px;color:#697D82;font-size:13px}.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-18px);opacity:0;pointer-events:none;background:var(--ink);color:white;border-radius:18px;padding:13px 18px;z-index:200;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.onboard{position:fixed;inset:0;background:linear-gradient(145deg,var(--bg),var(--bg2));z-index:180;display:none;align-items:center;justify-content:center;padding:18px}.onboard.show{display:flex}.oncard{width:min(500px,100%);min-height:540px;display:flex;flex-direction:column;justify-content:space-between}.step{display:none}.step.active{display:block}.step h1{font-size:clamp(36px,8vw,54px);line-height:1;color:var(--ink);margin:10px 0;letter-spacing:-1.4px}.step p{color:var(--muted);font-weight:700}.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{padding:15px;border-radius:16px;background:rgba(255,255,255,.42);border:1px solid var(--line);font-weight:800;color:var(--ink)}.choice.active{background:var(--ink);color:white}.dots{text-align:center;margin:16px 0}.dots span{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--muted);opacity:.35;margin:0 3px}.dots span.active{width:24px;background:var(--accent2);opacity:1}.obnav{display:grid;grid-template-columns:auto 1fr;gap:10px}.hidden{display:none!important}
+@media(max-width:760px){html,body{font-size:14px}.app{padding:18px 15px 34px}.brand{margin:6px 0 18px}.logo{font-size:54px;letter-spacing:-2.8px}.verse{grid-template-columns:54px 1fr}.bubble{width:48px;height:48px;border-radius:16px}.experience,.inspo-grid,.themes{grid-template-columns:1fr}.calendar,.week{gap:5px}.day{min-height:78px;padding:7px;border-radius:14px}.day b{font-size:16px}.holiday{font-size:8px!important}.task{grid-template-columns:1fr}.task-actions{grid-template-columns:repeat(5,1fr)}.task-actions button{height:36px}.profile-row{grid-template-columns:62px 1fr}.profile-row .btn{grid-column:1/-1}.switches,.share-options{grid-template-columns:1fr}.install{bottom:94px;width:min(330px,calc(100% - 36px))}.fab{bottom:18px;width:60px;height:60px}.weather p{max-width:74%}.weather .icon{font-size:30px;right:18px}.card{padding:17px;border-radius:22px}.title h1{font-size:38px}}
+@media(min-width:980px){.home-grid{grid-template-columns:1.08fr .92fr}.home-grid .wide{grid-column:1/-1}.settings-grid{grid-template-columns:1fr 1fr}.settings-grid .wide{grid-column:1/-1}}
+.btn.secondary.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border-color:transparent}.themeBtn.active{background:color-mix(in srgb,var(--accent) 18%,rgba(255,255,255,.42))}
+
+
+/* Focusly Premium UX Final — compact Apple/Samsung inspired layer */
+:root{
+  --radius:22px;
+  --radius-sm:15px;
+  --shadow:0 16px 42px rgba(31,61,68,.10);
+  --softShadow:0 10px 26px rgba(31,61,68,.08);
+}
+html,body{font-size:14px!important;}
+body{
+  background:linear-gradient(140deg,var(--bg),var(--bg2))!important;
+}
+body:before{opacity:.58!important;filter:blur(26px)!important;}
+.app{max-width:1040px!important;padding:16px clamp(14px,3vw,30px) 34px!important;}
+.top{margin-bottom:2px!important;}
+.menu,.ghost{border-radius:14px!important;background:rgba(255,255,255,.20)!important;backdrop-filter:blur(16px);}
+.brand{margin:4px 0 18px!important;padding:12px 2px!important;}
+.greeting{font-size:15px!important;font-weight:600!important;color:var(--text)!important;}
+.logo{font-size:clamp(48px,6vw,64px)!important;letter-spacing:-3px!important;}
+.tag{font-size:16px!important;margin-top:6px!important;font-weight:700!important;}
+.card{
+  padding:18px!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.58),rgba(255,255,255,.34))!important;
+  border:1px solid rgba(255,255,255,.45)!important;
+  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.38)!important;
+  backdrop-filter:blur(22px) saturate(1.12)!important;
+}
+.card h2,.card h3{font-size:clamp(18px,2vw,22px)!important;letter-spacing:-.45px!important;}
+.verse{grid-template-columns:50px 1fr!important;gap:14px!important;}
+.bubble{width:46px!important;height:46px!important;border-radius:16px!important;font-size:20px!important;}
+.verse p,.weather p{font-size:14.5px!important;line-height:1.45!important;}
+.weather{min-height:112px!important;padding-right:72px!important;}
+.weather .icon{right:20px!important;font-size:30px!important;opacity:.66!important;}
+.weather small{font-size:12px!important;margin-top:8px!important;}
+.experience{grid-template-columns:repeat(3,1fr)!important;gap:10px!important;}
+.mini{padding:12px!important;border-radius:16px!important;background:rgba(255,255,255,.28)!important;}
+.mini strong{font-size:18px!important;}.mini span{font-size:12px!important;}
+.title{margin:0 0 18px!important;}.title h1{font-size:clamp(34px,4.8vw,46px)!important;}.title p{font-size:15px!important;}
+.calendar-head{max-width:700px!important;margin:14px auto!important;}
+.round{width:46px!important;height:46px!important;border-radius:16px!important;font-size:25px!important;}
+.month-title{font-size:clamp(26px,3.6vw,36px)!important;}
+.week,.calendar{gap:7px!important;max-width:860px!important;}
+.day{min-height:82px!important;border-radius:16px!important;padding:8px!important;background:rgba(255,255,255,.30)!important;}
+.day b{font-size:16px!important}.day small{font-size:11px!important}.holiday{font-size:9px!important;}
+.toolbar{gap:8px!important;margin:12px 0!important;}
+.btn{border-radius:15px!important;padding:12px 15px!important;font-weight:750!important;box-shadow:var(--softShadow)!important;}
+.btn.secondary{background:rgba(255,255,255,.30)!important;color:var(--ink)!important;border:1px solid var(--line)!important;}
+.task-list{gap:10px!important;}
+.task{
+  padding:14px!important;
+  border-radius:20px!important;
+  grid-template-columns:1fr auto!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.50),color-mix(in srgb,var(--task,#7aa06f) 13%,rgba(255,255,255,.45)))!important;
+}
+.task .time{font-size:11.5px!important;padding:5px 10px!important;}
+.task h3{font-size:16.5px!important;margin:8px 0 7px!important;}
+.chip{font-size:10.5px!important;padding:4px 7px!important;}
+.task p{font-size:13px!important;margin-top:8px!important;}
+.task-actions{grid-template-columns:repeat(5,36px)!important;gap:5px!important;}
+.task-actions button{height:34px!important;border-radius:12px!important;}
+.progressbar{height:7px!important;}
+.inspo-grid{gap:14px!important;}
+.inspo-card p{font-size:14.5px!important;}
+.profile-row{grid-template-columns:62px 1fr auto!important;gap:12px!important;}.avatar{width:56px!important;height:56px!important;border-radius:18px!important;font-size:24px!important;}
+.themes{grid-template-columns:repeat(auto-fit,minmax(135px,1fr))!important;gap:9px!important;}.themeBtn{padding:12px!important;border-radius:15px!important;}
+.field{border-radius:15px!important;padding:12px 14px!important;background:rgba(255,255,255,.36)!important;}
+.switches{gap:9px!important;}
+.fab{width:60px!important;height:60px!important;font-size:34px!important;box-shadow:0 16px 38px color-mix(in srgb,var(--accent) 30%,transparent)!important;}
+.install{bottom:22px!important;}
+.drawer-panel{background:linear-gradient(145deg,var(--surface),var(--bg2))!important;}.navBtn{border-radius:14px!important;}
+.sheet{border-radius:24px!important;}
+.preview{border-radius:22px!important;}
+.quoteBox{font-size:18px!important;border-radius:20px!important;}
+button{will-change:transform;}
+button:hover{transform:translateY(-1.5px)!important;}
+button:active{transform:scale(.975)!important;}
+.btn,.fab,.choice.active,.navBtn.active{position:relative;overflow:hidden;}
+.btn:after,.fab:after,.choice.active:after,.navBtn.active:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent,rgba(255,255,255,.22),transparent);transform:translateX(-120%);transition:transform .65s ease;}
+.btn:hover:after,.fab:hover:after,.choice.active:hover:after,.navBtn.active:hover:after{transform:translateX(120%);}
+body.dark{
+  --bg:#0E1419;--bg2:#151D23;--surface:rgba(29,39,47,.68);--surface2:rgba(18,26,32,.72);
+  --ink:#F8F3E8;--text:#E9F0EE;--muted:#AEBFBE;--line:rgba(255,255,255,.12);
+}
+body.dark.theme-ivory,body.dark.theme-ocean,body.dark.theme-forest,body.dark.theme-graphite,body.dark.theme-aurora{
+  --bg:#0E1419;--bg2:#151D23;--surface:rgba(29,39,47,.68);--surface2:rgba(18,26,32,.72);
+  --ink:#F8F3E8;--text:#E9F0EE;--muted:#AEBFBE;--accent:#B5D29F;--accent2:#E3C27C;--accent3:#C7A2E8;
+}
+body.dark .card{background:linear-gradient(145deg,rgba(35,46,56,.74),rgba(21,30,38,.70))!important;border-color:rgba(255,255,255,.12)!important;box-shadow:0 18px 55px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.06)!important;}
+body.dark .field,body.dark .btn.secondary,body.dark .themeBtn,body.dark .mini,body.dark .choice{background:rgba(255,255,255,.08)!important;color:var(--text)!important;border-color:rgba(255,255,255,.13)!important;}
+body.dark .task{background:linear-gradient(145deg,rgba(35,46,56,.76),color-mix(in srgb,var(--task,#7aa06f) 18%,rgba(21,30,38,.72)))!important;border-color:color-mix(in srgb,var(--task,#7aa06f) 32%,rgba(255,255,255,.12))!important;}
+body.dark .task-actions button,body.dark .chip{background:rgba(255,255,255,.09)!important;color:var(--text)!important;border-color:rgba(255,255,255,.12)!important;}
+body.dark .day{background:rgba(255,255,255,.07)!important;}
+body.dark .profile-row h2,body.dark .card h2,body.dark .card h3,body.dark .logo,body.dark .month-title,body.dark .day b{color:var(--ink)!important;}
+@media(min-width:900px){.home-grid{max-width:860px!important}.settings-grid{grid-template-columns:1fr 1fr!important;}.settings-grid .wide{grid-column:1/-1!important;}.inspo-grid{grid-template-columns:repeat(2,1fr)!important;}}
+@media(max-width:760px){
+  html,body{font-size:13.5px!important}.app{padding:14px 13px 32px!important}.logo{font-size:49px!important}.brand{margin-bottom:14px!important}.card{padding:16px!important;border-radius:20px!important}.weather{padding-right:62px!important}.experience{grid-template-columns:1fr!important}.calendar{gap:5px!important}.week{gap:5px!important}.day{min-height:68px!important;border-radius:14px!important;padding:6px 3px!important}.day small{font-size:9.5px!important}.holiday{display:none!important}.task{display:block!important}.task-actions{grid-template-columns:repeat(5,1fr)!important;margin-top:11px!important}.task-actions button{width:100%!important}.inspo-grid{grid-template-columns:1fr!important}.profile-row{grid-template-columns:54px 1fr!important}.profile-row .btn{grid-column:1/-1}.switches{grid-template-columns:1fr 1fr}.share-options{grid-template-columns:1fr!important}.themes{grid-template-columns:1fr 1fr!important}.fab{width:58px!important;height:58px!important;right:18px!important;bottom:18px!important}.install{width:min(320px,calc(100% - 96px))!important;bottom:18px!important}.toolbar{display:grid!important;grid-template-columns:auto 1fr auto auto!important}.toolbar .field{min-width:0!important;}
+}
+
+
+
+/* Focusly Final Premium Pass — dark mode, responsive polish, buttons, tasks, inspiration */
+:root{--ease:cubic-bezier(.22,.61,.36,1)}
+body{font-size:14.5px;transition:background .28s var(--ease), color .28s var(--ease)}
+body.dark{--bg:#071016;--bg2:#101922;--surface:rgba(20,31,40,.78);--surface2:rgba(13,23,31,.78);--ink:#FFF8EA;--text:#EEF5F4;--muted:#BAC8C8;--accent:#A9C996;--accent2:#F0DDA7;--accent3:#C7A2E8;--line:rgba(255,255,255,.16);--shadow:0 22px 70px rgba(0,0,0,.40);--softShadow:0 14px 34px rgba(0,0,0,.28)}
+body.dark:before{opacity:.42;filter:blur(34px);background:radial-gradient(circle at 14% 10%,rgba(169,201,150,.24),transparent 30%),radial-gradient(circle at 86% 18%,rgba(240,221,167,.16),transparent 29%),radial-gradient(circle at 70% 86%,rgba(199,162,232,.13),transparent 32%)}
+.app{padding-top:18px;max-width:1100px}.brand{margin:8px 0 20px}.logo{font-size:clamp(44px,6.2vw,66px);letter-spacing:-3px}.greeting{font-size:clamp(14px,1.6vw,16px)}.tag{font-size:clamp(15px,1.8vw,18px)}
+.card{padding:18px;border-radius:24px}.card h2{font-size:clamp(21px,2.4vw,27px)}.card h3{font-size:clamp(18px,2vw,22px)}
+body.dark .card,body.dark .sheet,body.dark .drawer-panel{background:linear-gradient(145deg,rgba(24,36,46,.86),rgba(12,22,30,.82));border-color:rgba(255,255,255,.13);box-shadow:0 22px 70px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.05)}
+body.dark .mini,body.dark .themeBtn,body.dark .task-actions button,body.dark .navBtn,body.dark .choice{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.13);color:var(--text)}
+.btn,.round,.menu,.ghost,.fab,.themeBtn,.choice{will-change:transform;position:relative;overflow:hidden}.btn:after,.fab:after,.menu:after,.ghost:after,.themeBtn:after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);transform:translateX(-120%);transition:transform .65s var(--ease);pointer-events:none}.btn:hover:after,.fab:hover:after,.menu:hover:after,.ghost:hover:after,.themeBtn:hover:after{transform:translateX(120%)}
+.btn{min-height:44px;color:#fff;background:linear-gradient(135deg,var(--ink),color-mix(in srgb,var(--ink) 78%,var(--accent)));box-shadow:0 14px 30px color-mix(in srgb,var(--accent) 18%,transparent)}
+.btn.secondary,.menu,.ghost,.round{background:rgba(255,255,255,.42);color:var(--ink);border:1px solid var(--line);box-shadow:none}.btn.secondary:hover,.menu:hover,.ghost:hover,.round:hover{background:color-mix(in srgb,var(--accent) 14%,rgba(255,255,255,.52))}
+body.dark .btn{background:linear-gradient(135deg,#F6EEDC,#C9AA70);color:#101820;text-shadow:none;box-shadow:0 16px 36px rgba(240,221,167,.15)}
+body.dark .btn.secondary,body.dark .menu,body.dark .ghost,body.dark .round{background:rgba(255,255,255,.09);color:#F9F3E7;border-color:rgba(255,255,255,.16)}
+body.dark .btn.secondary:hover,body.dark .menu:hover,body.dark .ghost:hover,body.dark .round:hover{background:rgba(255,255,255,.14)}
+.field{min-height:44px;background:rgba(255,255,255,.52);color:var(--text)}body.dark .field{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.15);color:#F9F3E7}body.dark .field::placeholder{color:#9EADAD}
+.weather{min-height:118px}.weather .icon{opacity:.82}.experience{gap:10px}.mini{padding:14px}.mini strong{font-size:18px}
+.task{padding:15px;border-radius:21px;background:linear-gradient(145deg,rgba(255,255,255,.56),color-mix(in srgb,var(--task,#7aa06f) 13%,rgba(255,255,255,.60)))}body.dark .task{background:linear-gradient(145deg,rgba(25,38,48,.90),color-mix(in srgb,var(--task,#7aa06f) 22%,rgba(9,18,25,.88)));border-color:color-mix(in srgb,var(--task,#7aa06f) 42%,rgba(255,255,255,.13))}.task h3{font-size:17px}.task p{font-size:13px}.chip{background:rgba(255,255,255,.52);color:var(--muted)}body.dark .chip{background:rgba(255,255,255,.10);color:#D2DEDC}.task-actions{grid-template-columns:repeat(5,38px)}.task-actions button{color:var(--ink)}body.dark .task-actions button{color:#F7F1E3;background:rgba(255,255,255,.09)}
+.fab{right:max(22px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));width:60px;height:60px;font-size:34px;display:grid;place-items:center}.install{bottom:max(26px,env(safe-area-inset-bottom));pointer-events:auto}.install .btn{width:100%}
+.settings-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.wide{grid-column:1/-1}.language-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px}.language-switch button.active{outline:2px solid var(--accent2);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}body.dark .language-switch button.active{background:linear-gradient(135deg,#F6EEDC,#C9AA70);color:#101820}.sound-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.sound-row .btn{white-space:nowrap}
+.preview{background:radial-gradient(circle at 20% 18%,rgba(255,255,255,.55),transparent 18%),radial-gradient(circle at 80% 10%,rgba(240,221,167,.42),transparent 24%),linear-gradient(145deg,#F7EBD8,#D8E8E0 45%,#789D96);box-shadow:inset 0 1px 0 rgba(255,255,255,.38)}.quoteBox{background:rgba(255,253,247,.82);box-shadow:0 18px 50px rgba(16,32,38,.15);backdrop-filter:blur(14px);font-size:20px;line-height:1.35}body.dark .quoteBox{background:rgba(250,246,235,.90);color:#17313A}.preview{position:relative!important;overflow:hidden!important}.preview:after{content:'Focusly';position:absolute;left:50%;bottom:28px;transform:translateX(-50%);font-weight:900;letter-spacing:.8px;color:rgba(23,49,58,.62);background:rgba(255,253,247,.34);border:1px solid rgba(255,255,255,.40);border-radius:999px;padding:8px 18px;backdrop-filter:blur(10px);box-shadow:0 10px 28px rgba(20,42,48,.10)}body.dark .preview:after{color:rgba(23,49,58,.72);background:rgba(255,253,247,.58)}
+.share-options .btn.secondary{min-height:52px}
+@media(min-width:900px){.home-grid{grid-template-columns:1.05fr .95fr}.home-grid .card:nth-child(3){grid-column:1/-1}.task-list{max-width:900px}.fab{right:42px;bottom:42px}.install{bottom:28px}.inspo-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.settings-grid{grid-template-columns:1fr}.card{padding:16px;border-radius:22px}.logo{font-size:50px}.verse p,.weather p{font-size:14px}.day{min-height:74px}.fab{width:58px;height:58px;right:18px;bottom:18px}.install{bottom:88px;width:min(320px,calc(100% - 38px))}.task-actions{grid-template-columns:repeat(5,1fr)}.sound-row{grid-template-columns:1fr}.profile-row{grid-template-columns:58px 1fr}.profile-row .btn{grid-column:1/-1}}
+
+
+
+/* Focusly QA Final — estabilidad visual real, no romper estados ni posiciones */
+html,body{min-height:100vh!important;background:linear-gradient(135deg,var(--bg),var(--bg2))!important;}
+html.dark-root{background:linear-gradient(135deg,#071016,#101922)!important;}
+body{min-height:100vh!important;}
+.app{min-height:100vh!important;padding-bottom:96px!important;}
+body.dark .app{background:transparent!important;}
+body.dark .card, body.dark .mini, body.dark .day, body.dark .task, body.dark .sheet, body.dark .drawer-panel{
+  color:var(--text)!important;
+}
+body.dark .card p, body.dark .task p, body.dark .chip, body.dark .mini span, body.dark .field, body.dark select, body.dark textarea{
+  color:var(--muted)!important;
+}
+body.dark .btn.secondary,
+body.dark .round,
+body.dark .menu,
+body.dark .ghost,
+body.dark .themeBtn,
+body.dark .choice,
+body.dark .task-actions button{
+  background:rgba(255,255,255,.10)!important;
+  color:var(--text)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+body.dark .btn.secondary:hover,
+body.dark .round:hover,
+body.dark .menu:hover,
+body.dark .ghost:hover,
+body.dark .themeBtn:hover,
+body.dark .choice:hover{
+  background:rgba(255,255,255,.16)!important;
+  color:#fff!important;
+}
+body.dark .btn:not(.secondary){
+  background:linear-gradient(135deg,#F6EEDC,#D6B978)!important;
+  color:#111A1F!important;
+  text-shadow:none!important;
+}
+body.dark .install{color:#111A1F!important;}
+body.dark.theme-ivory{--bg:#071016;--bg2:#101922;--accent:#A9C996;--accent2:#F0DDA7;--accent3:#C7A2E8;}
+body.dark.theme-ocean{--bg:#07131B;--bg2:#102232;--accent:#7EC5D8;--accent2:#9ACB9E;--accent3:#A9B8FF;}
+body.dark.theme-forest{--bg:#08140E;--bg2:#102117;--accent:#93C882;--accent2:#D9B879;--accent3:#C5A1E5;}
+body.dark.theme-graphite{--bg:#0C0D0E;--bg2:#181A1D;--accent:#B8BFC7;--accent2:#E1BF78;--accent3:#9D94D8;}
+body.dark.theme-aurora{--bg:#0D0B1B;--bg2:#18162B;--accent:#B39AF7;--accent2:#9BD39B;--accent3:#F0A7CF;}
+.btn.active,
+.themeBtn.active,
+.choice.active,
+.navBtn.active,
+body.dark .btn.active,
+body.dark .themeBtn.active,
+body.dark .choice.active,
+body.dark .navBtn.active{
+  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
+  color:#111A1F!important;
+  border-color:transparent!important;
+  box-shadow:0 14px 34px color-mix(in srgb,var(--accent) 25%,transparent)!important;
+}
+.themeBtn small{display:block!important;margin-top:3px!important;opacity:.78!important;}
+.fab{
+  position:fixed!important;
+  right:calc(22px + env(safe-area-inset-right))!important;
+  bottom:calc(22px + env(safe-area-inset-bottom))!important;
+  width:60px!important;
+  height:60px!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:999px!important;
+  z-index:90!important;
+  transform:none!important;
+  color:#fff!important;
+}
+.fab:hover{transform:translateY(-3px)!important;}
+.install{z-index:80!important;bottom:22px!important;}
+/* Si el botón de instalar está visible, el + sube para no taparse */
+body.install-visible .fab{bottom:calc(98px + env(safe-area-inset-bottom))!important;}
+@media(max-width:760px){
+  .fab{right:18px!important;bottom:18px!important;width:58px!important;height:58px!important;}
+  body.install-visible .fab{bottom:92px!important;}
+  .app{padding-bottom:112px!important;}
+}
+.language-switch .btn{width:100%;}
+.language-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#restartOnboarding{display:block!important;}
+/* Inspiración: estilo más cálido, tipo app bíblica premium */
+.preview{
+  background:
+    radial-gradient(circle at 22% 18%,rgba(255,255,255,.55),transparent 18%),
+    radial-gradient(circle at 84% 14%,rgba(255,240,190,.55),transparent 22%),
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 38%,#e9f5f3),color-mix(in srgb,var(--accent2) 34%,#f7efe3))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+}
+.quoteBox{
+  background:rgba(255,255,255,.78)!important;
+  backdrop-filter:blur(18px)!important;
+  border:1px solid rgba(255,255,255,.55)!important;
+  box-shadow:0 18px 45px rgba(20,35,40,.16)!important;
+}
+body.dark .quoteBox{background:rgba(255,248,234,.88)!important;color:#18252B!important;}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:999;background:linear-gradient(145deg,var(--surface),var(--surface2));border:1px solid var(--line);border-radius:18px;padding:12px 15px;color:var(--ink);font-weight:800;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.22s ease}.toast.show{opacity:1;transform:translateX(-50%) translateY(5px)}
+.hidden{display:none!important;}
+
+
+
+/* Focusly v1.0 — Task tab centered premium layout */
+#tasks{
+  width:100%;
+  max-width:960px;
+  margin:0 auto!important;
+}
+#tasks .title,
+#tasks .toolbar,
+#tasks > .card{
+  max-width:900px;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+#tasks .title{
+  margin-bottom:26px!important;
+}
+#tasks .toolbar{
+  display:grid!important;
+  grid-template-columns:52px minmax(0,1fr) 76px 52px!important;
+  gap:12px!important;
+  align-items:center!important;
+}
+#tasks > .card{
+  padding:22px 24px 24px!important;
+}
+#tasks #taskDayTitle{
+  margin:0 0 14px!important;
+  font-size:clamp(24px,3vw,32px)!important;
+  letter-spacing:-.7px!important;
+}
+#tasks .task-list{
+  display:grid!important;
+  gap:14px!important;
+  width:100%!important;
+}
+#tasks .task{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:18px!important;
+  min-height:154px!important;
+  padding:22px 24px!important;
+  border-radius:25px!important;
+  overflow:hidden!important;
+  position:relative!important;
+  background:
+    radial-gradient(circle at 88% 18%, color-mix(in srgb,var(--task,#7aa06f) 17%, transparent), transparent 34%),
+    linear-gradient(145deg,rgba(255,255,255,.58),color-mix(in srgb,var(--task,#7aa06f) 11%,rgba(255,255,255,.62)))!important;
+}
+body.dark #tasks .task{
+  background:
+    radial-gradient(circle at 88% 18%, color-mix(in srgb,var(--task,#7aa06f) 24%, transparent), transparent 34%),
+    linear-gradient(145deg,rgba(24,37,48,.92),color-mix(in srgb,var(--task,#7aa06f) 18%,rgba(10,18,25,.88)))!important;
+}
+#tasks .task > div:first-child{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:flex-start!important;
+  min-width:0!important;
+}
+#tasks .task .time{
+  width:auto!important;
+  max-width:max-content!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:6px 13px!important;
+  border-radius:999px!important;
+  line-height:1!important;
+  font-size:12px!important;
+  margin:0 0 12px!important;
+  background:color-mix(in srgb,var(--task,#7aa06f) 23%,rgba(255,255,255,.68))!important;
+}
+#tasks .task h3{
+  margin:0 0 10px!important;
+  font-size:clamp(17px,1.8vw,20px)!important;
+  line-height:1.18!important;
+  letter-spacing:-.35px!important;
+}
+#tasks .chips{
+  gap:7px!important;
+  margin:0 0 10px!important;
+}
+#tasks .chip{
+  padding:5px 9px!important;
+  line-height:1!important;
+}
+#tasks .task p{
+  margin:4px 0 0!important;
+  padding:0!important;
+  max-width:640px!important;
+  line-height:1.5!important;
+  font-size:14px!important;
+}
+#tasks .task-actions{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:8px!important;
+  align-self:center!important;
+  margin:0!important;
+}
+#tasks .task-actions button{
+  width:40px!important;
+  height:40px!important;
+  min-width:40px!important;
+  border-radius:14px!important;
+  display:grid!important;
+  place-items:center!important;
+}
+#tasks .progressbar{
+  margin:12px 0 14px!important;
+}
+@media(max-width:760px){
+  #tasks{
+    max-width:100%;
+  }
+  #tasks .title,
+  #tasks .toolbar,
+  #tasks > .card{
+    max-width:100%;
+  }
+  #tasks .toolbar{
+    grid-template-columns:46px minmax(0,1fr) 62px 46px!important;
+    gap:8px!important;
+  }
+  #tasks > .card{
+    padding:18px 16px!important;
+    border-radius:24px!important;
+  }
+  #tasks .task{
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+    min-height:auto!important;
+    padding:19px 17px 17px!important;
+    border-radius:23px!important;
+  }
+  #tasks .task-actions{
+    display:grid!important;
+    grid-template-columns:repeat(5,1fr)!important;
+    gap:7px!important;
+    width:100%!important;
+    justify-content:stretch!important;
+  }
+  #tasks .task-actions button{
+    width:100%!important;
+    min-width:0!important;
+    height:38px!important;
+  }
+  #tasks .task p{
+    max-width:100%!important;
+    font-size:13.5px!important;
+  }
+}
+
+
+
+/* Focusly v1.0 final polish: home premium + task day navigation + safer responsive spacing */
+#home .brand{max-width:760px;margin:0 auto 24px;text-align:left;padding:8px 2px 12px}
+#home .greeting{font-size:clamp(14px,1.4vw,16px);opacity:.94;margin-bottom:4px}
+#home .logo{font-size:clamp(42px,5.6vw,62px);letter-spacing:-3px}
+#home .tag{font-size:clamp(14px,1.7vw,17px);margin-top:8px}
+#home .home-grid{max-width:980px;margin:0 auto;grid-template-columns:1.05fr .95fr;align-items:stretch}
+#home .wide{grid-column:1/-1}
+#home .card{transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s var(--ease)}
+#home .card:hover{transform:translateY(-3px);box-shadow:0 28px 72px color-mix(in srgb,var(--accent) 17%,rgba(20,50,55,.10)), inset 0 1px 0 rgba(255,255,255,.45)}
+#weatherMain{font-size:clamp(34px,4.8vw,52px)!important;line-height:.95!important;color:var(--ink)!important;font-weight:900!important;letter-spacing:-1.7px;margin:14px 0 4px!important}
+#weatherSeason{font-size:clamp(14px,1.8vw,17px)!important;font-weight:800;color:var(--text)!important;margin:0 0 7px!important}
+#weatherStatus{font-size:12px!important;letter-spacing:.1px;opacity:.8}
+.weather .icon{font-size:clamp(34px,4vw,46px)!important;right:26px!important}
+.experience{grid-template-columns:1fr 1fr 1.18fr}.mini{min-height:82px;display:flex;flex-direction:column;justify-content:center}.mini strong{font-size:clamp(20px,2.2vw,27px)}
+.task{max-width:100%;grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:18px 18px 18px 20px;border-radius:24px;min-height:142px}.task .time{width:auto;max-width:max-content}.task h3{margin:12px 0 9px}.task p{line-height:1.55;margin-top:16px;max-width:760px}.task-actions{align-self:center}.task-actions button{transition:transform .18s var(--ease),background .18s var(--ease)}.task-actions button:hover{transform:translateY(-2px)}
+#tasks .card{max-width:920px;margin-left:auto;margin-right:auto}#tasks .toolbar{max-width:920px;margin-left:auto;margin-right:auto}
+@media (max-width:760px){#home .brand{text-align:left;margin-left:auto;margin-right:auto}#home .home-grid{grid-template-columns:1fr}.experience{grid-template-columns:1fr}.weather{padding-right:68px!important}.task{grid-template-columns:1fr;min-height:auto;padding:17px}.task-actions{grid-template-columns:repeat(5,1fr);width:100%;margin-top:14px}.task-actions button{width:100%}#weatherMain{font-size:40px!important}}
+
+</style>
+</head>
+<body class="theme-ivory">
+<div class="toast" id="toast"></div>
+<div class="onboard" id="onboard"><div class="card oncard"><div><div class="step active"><div class="logo">Focusly</div><div class="tag" data-t="tag">Tu día. Tu enfoque.</div><h1 data-t="obWelcome">Vive tu día con intención</h1><p data-t="obWelcomeP">Personaliza Focusly para que cada mañana se sienta tuya.</p></div><div class="step"><h1 data-t="obName">¿Cómo te llamas?</h1><p data-t="obNameP">Usaremos tu nombre en el saludo diario.</p><input class="field" id="obNameInput" placeholder="Carol" /></div><div class="step"><h1 data-t="obBirth">Tu cumpleaños</h1><p data-t="obBirthP">Focusly marcará tu día en el calendario y preparará una felicitación especial.</p><input class="field" type="date" id="obBirthInput" /></div><div class="step"><h1 data-t="obLocation">Ubicación</h1><p data-t="obLocationP">La app intentará detectar país y ciudad para clima y feriados.</p><button class="btn" id="obLocationBtn" data-t="detectLocation">Detectar ubicación</button><p id="obLocationText"></p></div><div class="step"><h1 data-t="obLang">Idioma</h1><p data-t="obLangP">Elige la experiencia principal.</p><div class="choices"><button class="choice" data-lang="es">Español</button><button class="choice" data-lang="en">English</button></div></div><div class="step"><h1 data-t="obNotify">Notificaciones</h1><p data-t="obNotifyP">Activa recordatorios importantes sin saturarte.</p><div class="choices"><button class="choice" id="obNotifyYes" data-t="activate">Activar</button><button class="choice" id="obNotifyNo" data-t="later">Después</button></div></div></div><div><div class="dots" id="dots"></div><div class="obnav"><button class="round" id="obBack">‹</button><button class="btn" id="obNext" data-t="continue">Continuar</button></div></div></div></div>
+<div class="drawer" id="drawer"><div class="drawer-panel"><h2>Focusly</h2><button class="navBtn active" data-screen="home" data-t="home">Inicio</button><button class="navBtn" data-screen="calendar" data-t="calendar">Calendario</button><button class="navBtn" data-screen="tasks" data-t="tasks">Tareas</button><button class="navBtn" data-screen="inspiration" data-t="inspiration">Inspiración</button><button class="navBtn" data-screen="settings" data-t="settings">Ajustes</button></div></div>
+<main class="app"><div class="top"><button class="menu" id="menuBtn">☰</button><button class="ghost" id="resetView" title="Focusly">⌁</button></div>
+<section id="home" class="screen active"><div class="brand"><div class="greeting" id="greeting">Buenos días</div><div class="logo">Focusly</div><div class="tag" data-t="tag">Tu día. Tu enfoque.</div></div><div class="grid home-grid"><article class="card verse"><div class="bubble">📖</div><div><h2 data-t="verseDay">Versículo del día</h2><p id="homeVerse"></p><div class="ref" id="homeRef"></div></div></article><article class="card weather" id="weatherCard"><h3 data-t="weatherTitle">Clima y temporada</h3><p id="weatherMain">Detectando clima local...</p><p id="weatherSeason">Temporada actual</p><small id="weatherStatus">Actualizando...</small><div class="icon" id="weatherIcon">☁️</div></article><article class="card wide"><h3 data-t="todayFocus">Tu enfoque de hoy</h3><div class="experience"><div class="mini"><strong id="miniTasks">0</strong><span data-t="pendingTasks">Pendientes</span></div><div class="mini"><strong id="miniDone">0%</strong><span data-t="progress">Progreso</span></div><div class="mini"><strong id="miniInspo">✨</strong><span id="miniPhrase"></span></div></div></article></div></section>
+<section id="calendar" class="screen"><div class="title"><h1 data-t="calendar">Calendario</h1><p data-t="tag">Tu día. Tu enfoque.</p></div><div class="calendar-head"><button class="round" id="prevMonth">‹</button><div class="month-title" id="monthTitle"></div><button class="round" id="nextMonth">›</button></div><div class="week" id="weekdays"></div><div class="calendar" id="calendarGrid"></div><div class="card day-panel"><h2 id="selectedTitle">Día seleccionado</h2><p id="selectedSummary"></p><button class="btn" id="addForDay">+ Nueva tarea para este día</button></div></section>
+<section id="tasks" class="screen"><div class="title"><h1 data-t="tasks">Tareas</h1><p data-t="taskSub">Organiza sin saturarte.</p></div><div class="toolbar"><button class="round" id="prevDay">‹</button><input class="field" type="date" id="taskDate"><button class="btn secondary" id="todayBtn" data-t="today">Hoy</button><button class="round" id="nextDay">›</button></div><div class="card"><h2 id="taskDayTitle">Hoy</h2><div id="taskList" class="task-list"></div></div><div class="card" style="margin-top:16px"><h3 data-t="dayProgress">Progreso del día</h3><strong id="progressText" style="font-size:36px;color:var(--ink)">0%</strong><div class="progressbar"><span id="progressFill"></span></div><p id="progressMeta"></p></div></section>
+<section id="inspiration" class="screen"><div class="title"><h1 data-t="inspiration">Inspiración</h1><p data-t="inspoSub">Una palabra para edificar tu día.</p></div><div class="grid inspo-grid" id="inspoGrid"></div><div class="card" style="margin-top:16px"><h3 data-t="shareWhat">¿Qué quieres compartir?</h3><div class="share-options"><button class="btn" data-share="verse" data-t="verse">Versículo</button><button class="btn secondary" data-share="advice" data-t="advice">Consejo</button><button class="btn secondary" data-share="reflection" data-t="reflection">Reflexión</button><button class="btn secondary" data-share="focus" data-t="focusWeekly">Enfoque semanal</button></div></div></section>
+<section id="settings" class="screen"><div class="title"><h1 data-t="settings">Ajustes</h1><p data-t="settingsSub">Personaliza tu experiencia.</p></div><div class="settings-grid"><article class="card wide"><div class="profile-row"><div class="avatar" id="avatar">C</div><div><h2 id="profileName">Carol</h2><p id="profileMeta"></p></div><button class="btn secondary" id="editProfile" data-t="edit">Editar</button></div><div id="profileForm" class="hidden" style="margin-top:16px"><input class="field" id="nameInput" placeholder="Nombre"><input class="field" id="birthInput" type="date"><input class="field" id="cityInput" placeholder="Ciudad"><button class="btn" id="saveProfile" data-t="save">Guardar cambios</button><button class="btn secondary" id="restartOnboarding" type="button" style="margin-top:10px;width:100%">Reiniciar experiencia inicial</button></div></article><article class="card"><h2 data-t="mode">Modo</h2><p data-t="modeSub">Claro u oscuro sin perder legibilidad.</p><div class="switches"><button class="btn secondary" id="lightBtn" data-t="light">Claro</button><button class="btn secondary" id="darkBtn" data-t="dark">Oscuro</button></div></article><article class="card"><h2 id="settingsLangTitle">Idioma</h2><p id="settingsLangSub">Cambia la experiencia completa de Focusly.</p><div class="language-switch"><button class="btn secondary" id="settingsLangEs">Español</button><button class="btn secondary" id="settingsLangEn">English</button></div></article><article class="card"><h2 data-t="theme">Tema</h2><p data-t="themeSub">Elige una atmósfera visual.</p><div class="themes" id="themeBtns"></div></article><article class="card"><h2 data-t="notifications">Notificaciones</h2><p data-t="notifSub">Solo avisos importantes, sin saturarte.</p><div class="switches"><button class="btn secondary" id="enableNotif" data-t="activate">Activar</button><button class="btn secondary" id="disableNotif" data-t="deactivate">Desactivar</button></div><button class="btn secondary" id="testNotif" style="margin-top:10px" data-t="testNotification">Probar notificación</button><p id="notifStatus"></p></article><article class="card"><h2 data-t="weatherTitle">Clima y temporada</h2><p data-t="weatherExplain">Se actualiza con tu ubicación cuando está disponible.</p><button class="btn secondary" id="refreshWeather" data-t="refreshWeather">Actualizar clima</button><p id="settingsWeatherStatus"></p></article><article class="card"><h2 data-t="sync">Cuenta y sincronización</h2><p data-t="syncSub">La sincronización real queda para Firebase.</p><p id="syncStatus" style="padding:12px;border-radius:16px;background:rgba(0,0,0,.06);font-weight:800" data-t="localMode">Modo local activo. Tus datos están guardados solo en este dispositivo.</p><button class="btn" id="googleBtn" data-t="continueGoogle">Continuar con Google</button><button class="btn secondary" id="exportBtn" style="margin-top:10px" data-t="exportBackup">Exportar respaldo</button></article></div></section>
+</main><button class="fab" id="fab">+</button><button class="btn install" id="installBtn">Instalar Focusly</button>
+<div class="modal" id="taskModal"><div class="sheet"><h2 data-t="newTask">Nueva tarea</h2><input class="field" id="taskTitle" placeholder="Título"><div class="switches"><input class="field" id="taskStart" type="time"><input class="field" id="taskEnd" type="time"></div><select class="field" id="taskArea"><option>Personal</option><option>Trabajo</option><option>Espiritual</option><option>Familia</option><option>Estudio</option></select><select class="field" id="taskPriority"><option value="Normal">Normal</option><option value="Alta">Alta</option><option value="Baja">Baja</option></select><textarea class="field" id="taskNote" placeholder="Nota"></textarea>
+<div class="switches"><label id="taskColorLabel">Color<input class="field" id="taskColor" type="color" value="#7aa06f"></label><label id="taskNotifyLabel">Recordatorio<select class="field" id="taskNotify"><option value="none">Sin recordatorio</option><option value="time">A la hora</option><option value="5">5 min antes</option><option value="10">10 min antes</option><option value="15">15 min antes</option><option value="30">30 min antes</option><option value="60">1 hora antes</option></select></label></div><div class="sound-row"><label id="taskSoundLabel">Tono de notificación<select class="field" id="taskSound"><option value="soft">Suave</option><option value="bell">Campana</option><option value="chime">Cristal</option><option value="sunrise">Amanecer</option><option value="harp">Arpa</option></select></label><button class="btn secondary" id="testTaskSound" type="button">Probar tono</button></div>
+<div class="switches"><button class="btn secondary" id="cancelTask" data-t="cancel">Cancelar</button><button class="btn shine" id="saveTask" data-t="save">Guardar</button></div></div></div>
+<div class="modal" id="shareModal"><div class="sheet"><h2 data-t="preview">Vista previa</h2><div class="preview"><div class="quoteBox" id="quoteBox"></div></div><div class="switches"><button class="btn" id="shareNow" data-t="share">Compartir</button><button class="btn secondary" id="downloadNow" data-t="download">Descargar</button></div><button class="btn secondary" id="closeShare" style="margin-top:10px;width:100%" data-t="close">Cerrar</button></div></div>
+<canvas id="shareCanvas" width="1200" height="1200" class="hidden"></canvas>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+const $=id=>document.getElementById(id);const qs=s=>document.querySelector(s);const qsa=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{return JSON.parse(localStorage.getItem('focusly_'+k))??d}catch{return d}},set(k,v){localStorage.setItem('focusly_'+k,JSON.stringify(v))}};
+let state=store.get('state',{lang:'es',name:'',birth:'',city:'',country:'Guatemala',theme:'ivory',dark:false,notif:false,onboard:false,weather:null});
+const FOCUSLY_BUILD='qa-final-2026-06-17-2';
+if(state.build!==FOCUSLY_BUILD){ state.onboard=false; state.build=FOCUSLY_BUILD; store.set('state',state); }
+let tasks=store.get('tasks',[]);let selectedDate=iso(new Date());let calDate=new Date();let shareCurrent=null;let deferredPrompt=null;
+const firebaseConfig={apiKey:'AIzaSyD3KVlX4nzwEruI6qBCbmgMQDbEcfbSTW4',authDomain:'focusly-28ab4.firebaseapp.com',projectId:'focusly-28ab4',storageBucket:'focusly-28ab4.firebasestorage.app',messagingSenderId:'566603151112',appId:'1:566603151112:web:4248e8ed2855f938829ebd',measurementId:'G-MMFKC0XMCZ'};
+let fbApp=null,fbAuth=null,fbDb=null,fbUser=null,fbUnsub=null,fbSyncTimer=null,fbApplyingCloud=false,fbReady=false;
+const T={es:{tag:'Tu día. Tu enfoque.',home:'Inicio',calendar:'Calendario',tasks:'Tareas',inspiration:'Inspiración',settings:'Ajustes',verseDay:'Versículo del día',weatherTitle:'Clima y temporada',todayFocus:'Tu enfoque de hoy',pendingTasks:'Pendientes',progress:'Progreso',taskSub:'Organiza sin saturarte.',today:'Hoy',dayProgress:'Progreso del día',inspoSub:'Una palabra para edificar tu día.',shareWhat:'¿Qué quieres compartir?',verse:'Versículo',advice:'Consejo',reflection:'Reflexión',focusWeekly:'Enfoque semanal',settingsSub:'Personaliza tu experiencia.',edit:'Editar',save:'Guardar cambios',mode:'Modo',modeSub:'Claro u oscuro sin perder legibilidad.',light:'Claro',dark:'Oscuro',theme:'Tema',themeSub:'Elige una atmósfera visual.',notifications:'Notificaciones',notifSub:'Solo avisos importantes, sin saturarte.',activate:'Activar',deactivate:'Desactivar',testNotification:'Probar notificación',weatherExplain:'Se actualiza con tu ubicación cuando está disponible.',refreshWeather:'Actualizar clima',sync:'Cuenta y sincronización',syncSub:'Sincroniza tu cuenta, tareas y ajustes.',localMode:'Modo local activo. Inicia sesión con Google para sincronizar.',continueGoogle:'Continuar con Google',exportBackup:'Exportar respaldo',newTask:'Nueva tarea',cancel:'Cancelar',preview:'Vista previa',share:'Compartir',download:'Descargar',close:'Cerrar',continue:'Continuar',obWelcome:'Vive tu día con intención',obWelcomeP:'Personaliza Focusly para que cada mañana se sienta tuya.',obName:'¿Cómo te llamas?',obNameP:'Usaremos tu nombre en el saludo diario.',obBirth:'Tu cumpleaños',obBirthP:'Focusly marcará tu día en el calendario y preparará una felicitación especial.',obLocation:'Ubicación',obLocationP:'La app intentará detectar país y ciudad para clima y feriados.',detectLocation:'Detectar ubicación',obLang:'Idioma',obLangP:'Elige la experiencia principal.',obNotify:'Notificaciones',obNotifyP:'Activa recordatorios importantes sin saturarte.',later:'Después',language:'Idioma',languageSub:'Cambia la experiencia completa de Focusly.',sound:'Tono de notificación',testSound:'Probar tono',soft:'Suave',bell:'Campana',chime:'Cristal',sunrise:'Amanecer',harp:'Arpa'},en:{tag:'Your day. Your focus.',home:'Home',calendar:'Calendar',tasks:'Tasks',inspiration:'Inspiration',settings:'Settings',verseDay:'Verse of the day',weatherTitle:'Weather and season',todayFocus:'Today’s focus',pendingTasks:'Pending',progress:'Progress',taskSub:'Organize without overwhelm.',today:'Today',dayProgress:'Day progress',inspoSub:'A word to build your day.',shareWhat:'What do you want to share?',verse:'Verse',advice:'Advice',reflection:'Reflection',focusWeekly:'Weekly focus',settingsSub:'Personalize your experience.',edit:'Edit',save:'Save changes',mode:'Mode',modeSub:'Light or dark without losing readability.',light:'Light',dark:'Dark',theme:'Theme',themeSub:'Choose a visual atmosphere.',notifications:'Notifications',notifSub:'Important reminders only, no overload.',activate:'Enable',deactivate:'Disable',testNotification:'Test notification',weatherExplain:'Updates with your location when available.',refreshWeather:'Refresh weather',sync:'Account and sync',syncSub:'Sync your account, tasks and settings.',localMode:'Local mode active. Sign in with Google to sync.',continueGoogle:'Continue with Google',exportBackup:'Export backup',newTask:'New task',cancel:'Cancel',preview:'Preview',share:'Share',download:'Download',close:'Close',continue:'Continue',obWelcome:'Live your day with intention',obWelcomeP:'Personalize Focusly so every morning feels yours.',obName:'What is your name?',obNameP:'We will use your name in your daily greeting.',obBirth:'Your birthday',obBirthP:'Focusly will mark your day in the calendar and prepare a special greeting.',obLocation:'Location',obLocationP:'The app will try to detect country and city for weather and holidays.',detectLocation:'Detect location',obLang:'Language',obLangP:'Choose the main experience.',obNotify:'Notifications',obNotifyP:'Enable important reminders without overload.',later:'Later',language:'Language',languageSub:'Change the full Focusly experience.',sound:'Notification tone',testSound:'Test tone',soft:'Soft',bell:'Bell',chime:'Crystal',sunrise:'Sunrise',harp:'Harp'}};
+const verses=[['Habacuc 3:19','El Señor es mi fortaleza; Él hace mis pies como los de las ciervas, y por las alturas me hace caminar.'],['Isaías 40:31','Los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como las águilas.'],['Salmo 37:5','Encomienda a Jehová tu camino, y confía en él; y él hará.'],['Proverbios 16:3','Encomienda a Jehová tus obras, y tus pensamientos serán afirmados.'],['Jeremías 29:11','Yo sé los pensamientos que tengo acerca de vosotros, pensamientos de paz.'],['Salmo 143:8','Hazme oír por la mañana tu misericordia, porque en ti he confiado.'],['Filipenses 4:13','Todo lo puedo en Cristo que me fortalece.']];
+const inspo={advice:['Comienza por aquello que Dios te confió para hoy.','No llenes tu agenda de ruido; guarda espacio para la voz de Dios.','Haz lo importante con paz, no desde la presión.','Ordena tus pasos y deja que Dios afirme tu camino.','No negocies tu propósito por una urgencia pasajera.'],reflection:['Dios no solo ordena tus días; también forma tu corazón en el proceso.','Cuando vuelves tu enfoque al Señor, el día deja de dominarte.','La obediencia pequeña de hoy puede abrir una puerta grande mañana.','Tu avance no siempre hace ruido, pero cuando nace en Dios produce fruto.','La claridad llega cuando tu alma vuelve al centro correcto.'],focus:['Hoy camina con propósito, paz y dirección de Dios.','Avanza sin ansiedad; Dios también trabaja en el proceso.','Cuida tu fuego, protege tu mente y honra tu asignación.','Haz espacio para lo eterno mientras administras lo diario.','Enfócate en lo que edifica, ordena y acerca tu corazón a Dios.']};
+const themes=[['ivory','Marfil'],['ocean','Océano'],['forest','Bosque'],['graphite','Grafito'],['aurora','Aurora']];
+function modeName(){return state.dark?(lang()==='en'?'Dark':'Oscuro'):(lang()==='en'?'Light':'Claro')}
+function save(){store.set('state',state);store.set('tasks',tasks);scheduleCloudSave()}function lang(){return state.lang||'es'}function tr(k){return T[lang()][k]||T.es[k]||k}function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}function iso(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}function addDays(dateStr,amount){const [y,m,d]=dateStr.split('-').map(Number);const dt=new Date(y,m-1,d);dt.setDate(dt.getDate()+amount);return iso(dt)}function today(){return iso(new Date())}function dayIndex(){return Math.floor(Date.now()/86400000)}function daily(arr){return arr[dayIndex()%arr.length]}function greeting(){const h=new Date().getHours();let g=lang()==='en'?(h<12?'Good morning':h<19?'Good afternoon':'Good evening'):(h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches');return state.name?`${g}, ${state.name}`:g}function season(){const m=new Date().getMonth()+1;return (state.country||'Guatemala').toLowerCase().includes('guatemala')?(m>=5&&m<=10?(lang()==='en'?'Rainy season':'Temporada lluviosa'):(lang()==='en'?'Dry season':'Temporada seca')):(lang()==='en'?'Current season':'Temporada actual')}
+function applyI18n(){document.documentElement.lang=lang();qsa('[data-t]').forEach(el=>el.textContent=tr(el.dataset.t));$('greeting').textContent=greeting();$('installBtn').textContent=lang()==='en'?'Install Focusly':'Instalar Focusly';renderAll()}
+function applyTheme(){document.body.className=(state.dark?'dark ':'')+'theme-'+(state.theme||'ivory');document.documentElement.classList.toggle('dark-root',!!state.dark);document.querySelector('meta[name=theme-color]')?.setAttribute('content',state.dark?'#071016':'#F7F3EA');qsa('.themeBtn').forEach(b=>b.classList.toggle('active',b.dataset.theme===state.theme));save()}
+async function detectLocation(silent=false){const setFallback=()=>{state.country=state.country||'Guatemala';state.city=state.city||'Villa Canales';state.weather={temp:25,condition:lang()==='en'?'cloudy':'nublado',city:state.city,country:state.country,icon:'☁️',time:Date.now()};save();renderWeather();if(!silent)toast(lang()==='en'?'Approximate weather loaded':'Clima aproximado cargado')};if(!navigator.geolocation){setFallback();return}try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:false,timeout:9000,maximumAge:600000}));const {latitude:lat,longitude:lon}=pos.coords;let temp=25,code=3;try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`,{cache:'no-store'});const j=await r.json();temp=Math.round(j.current_weather.temperature);code=j.current_weather.weathercode}catch{}let city=state.city||((lat>13&&lat<18&&lon>-93&&lon<-88)?'Villa Canales':'Ubicación actual');let country=(lat>13&&lat<18&&lon>-93&&lon<-88)?'Guatemala':state.country||'Ubicación actual';if(lat>35&&lat<44&&lon>-10&&lon<5){country='España';city=state.city||'Ubicación actual'}state.city=city;state.country=country;state.weather={temp,condition:weatherText(code),city,country,icon:weatherIcon(code),time:Date.now()};save();renderWeather();if(!silent)toast(lang()==='en'?'Weather updated':'Clima actualizado')}catch(e){setFallback()}}
+function weatherText(c){if([0,1].includes(c))return lang()==='en'?'clear':'despejado';if([2,3].includes(c))return lang()==='en'?'cloudy':'nublado';if(c>=51&&c<70)return lang()==='en'?'rain':'lluvia';if(c>=95)return lang()==='en'?'storm':'tormenta';return lang()==='en'?'local weather':'clima local'}function weatherIcon(c){if([0,1].includes(c))return'☀️';if([2,3].includes(c))return'☁️';if(c>=51&&c<70)return'🌧️';if(c>=95)return'⛈️';return'☁️'}
+function renderWeather(){const w=state.weather;const loc=[state.city,state.country].filter(Boolean).join(', ')||'Guatemala';const cap=x=>(x||'').charAt(0).toUpperCase()+(x||'').slice(1);if(w){$('weatherMain').textContent=`${w.temp}°`;$('weatherSeason').textContent=`${cap(w.condition)} · ${season()}`;$('weatherStatus').textContent=`${loc} · ${lang()==='en'?'Updated now':'Actualizado ahora'}`;$('weatherIcon').textContent=w.icon||'☁️';$('settingsWeatherStatus').textContent=`${loc} · ${w.temp}°C`}else{$('weatherMain').textContent=lang()==='en'?'Local weather':'Clima local';$('weatherSeason').textContent=season();$('weatherStatus').textContent=lang()==='en'?'Enable location to update':'Activa ubicación para actualizar';$('weatherIcon').textContent='☁️'}}
+function holidayMap(y,country){const m={};const add=(d,n)=>m[d]=n;const gt=(state.country||'Guatemala').toLowerCase().includes('guatemala');if(gt){add(`${y}-01-01`,lang()==='en'?'New Year':'Año Nuevo');add(`${y}-05-01`,lang()==='en'?'Labor Day':'Día del Trabajo');add(`${y}-06-30`,lang()==='en'?'Army Day':'Día del Ejército');add(`${y}-09-15`,lang()==='en'?'Independence Day':'Independencia');add(`${y}-10-20`,lang()==='en'?'Revolution Day':'Día de la Revolución');add(`${y}-11-01`,lang()==='en'?'All Saints Day':'Día de Todos los Santos');add(`${y}-12-24`,lang()==='en'?'Christmas Eve':'Nochebuena');add(`${y}-12-25`,lang()==='en'?'Christmas':'Navidad');add(`${y}-12-31`,lang()==='en'?'New Year’s Eve':'Fin de Año')}else{add(`${y}-01-01`,lang()==='en'?'New Year':'Año Nuevo');add(`${y}-01-06`,lang()==='en'?'Epiphany':'Reyes');add(`${y}-05-01`,lang()==='en'?'Labor Day':'Día del Trabajo');add(`${y}-10-12`,lang()==='en'?'National Day':'Fiesta Nacional');add(`${y}-12-06`,lang()==='en'?'Constitution Day':'Constitución');add(`${y}-12-25`,lang()==='en'?'Christmas':'Navidad')}return m}
+function renderHome(){$('greeting').textContent=greeting();const v=daily(verses);$('homeVerse').textContent=`“${v[1]}”`;$('homeRef').textContent=v[0];const dayTasks=tasks.filter(t=>t.date===today());const done=dayTasks.filter(t=>t.done).length;$('miniTasks').textContent=dayTasks.filter(t=>!t.done).length;$('miniDone').textContent=dayTasks.length?Math.round(done/dayTasks.length*100)+'%':'0%';$('miniPhrase').textContent=daily(inspo.focus);renderWeather()}
+function renderCalendar(){const y=calDate.getFullYear(),m=calDate.getMonth();const monthName=calDate.toLocaleDateString(lang()==='en'?'en-US':'es-GT',{month:'long',year:'numeric'});$('monthTitle').textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);$('weekdays').innerHTML=(lang()==='en'?['M','T','W','T','F','S','S']:['L','M','M','J','V','S','D']).map(d=>`<div>${d}</div>`).join('');const first=new Date(y,m,1);const offset=(first.getDay()+6)%7;const days=new Date(y,m+1,0).getDate();const hol=holidayMap(y,state.country);let html='';for(let i=0;i<offset;i++)html+='<div class="day blank"></div>';for(let d=1;d<=days;d++){const date=iso(new Date(y,m,d));const count=tasks.filter(t=>t.date===date).length;const isBirth=state.birth&&state.birth.slice(5)===date.slice(5);html+=`<button class="day ${date===today()?'today':''} ${date===selectedDate?'selected':''} ${isBirth?'birthday':''}" data-date="${date}"><b>${d}</b><small>${count} ${lang()==='en'?'tasks':'tareas'}</small>${hol[date]?`<div class="dot"></div><small class="holiday">${hol[date]}</small>`:''}${isBirth?`<div class="dot"></div><small class="holiday">${lang()==='en'?'Birthday':'Cumpleaños'}</small>`:''}</button>`}$('calendarGrid').innerHTML=html;qsa('.day[data-date]').forEach(b=>b.onclick=()=>{selectedDate=b.dataset.date;renderCalendar();renderSelectedDay()});renderSelectedDay()}
+function renderSelectedDay(){const d=new Date(selectedDate+'T00:00:00');$('selectedTitle').textContent=d.toLocaleDateString(lang()==='en'?'en-US':'es-GT',{weekday:'long',day:'numeric',month:'long'});const list=tasks.filter(t=>t.date===selectedDate);$('selectedSummary').textContent=`${list.length} ${lang()==='en'?'tasks':'tareas'} · ${list.filter(t=>t.done).length} ${lang()==='en'?'done':'hechas'} · ${list.filter(t=>!t.done).length} ${lang()==='en'?'pending':'pendientes'}`}
+function renderTasks(){$('taskDate').value=selectedDate;const d=new Date(selectedDate+'T00:00:00');$('taskDayTitle').textContent=selectedDate===today()?tr('today'):d.toLocaleDateString(lang()==='en'?'en-US':'es-GT',{weekday:'long',day:'numeric',month:'short'});let list=tasks.filter(t=>t.date===selectedDate).sort((a,b)=>(a.start||'').localeCompare(b.start||''));$('taskList').innerHTML=list.length?list.map(t=>`<article class="task ${t.done?'done':''}" style="--task:${t.color||'#7aa06f'}"><div><span class="time">${t.start||'--:--'} ${t.end?'- '+t.end:''}</span><h3>${escapeHtml(t.title)}</h3><div class="chips"><span class="chip">${t.area}</span><span class="chip">${t.priority}</span><span class="chip">${t.done?(lang()==='en'?'Done':'Hecha'):(lang()==='en'?'Pending':'Pendiente')}</span></div>${t.notify&&t.notify!=='none'?`<div class="chips"><span class="chip">🔔 ${notifyLabel(t.notify)}</span></div>`:''}${t.note?`<p>${escapeHtml(t.note)}</p>`:''}</div><div class="task-actions"><button data-act="done" data-id="${t.id}">✓</button><button data-act="miss" data-id="${t.id}">×</button><button data-act="edit" data-id="${t.id}">✎</button><button data-act="move" data-id="${t.id}">↪</button><button data-act="del" data-id="${t.id}">🗑</button></div></article>`).join(''):`<p style="text-align:center;color:var(--muted);font-weight:700">${lang()==='en'?'No tasks for this day.':'No hay tareas para este día.'}</p>`;qsa('[data-act]').forEach(b=>b.onclick=()=>taskAction(b.dataset.act,b.dataset.id));const done=list.filter(t=>t.done).length;const pct=list.length?Math.round(done/list.length*100):0;$('progressText').textContent=pct+'%';$('progressFill').style.width=pct+'%';$('progressMeta').textContent=`${done} ${lang()==='en'?'done':'hecha'} · ${list.length-done} ${lang()==='en'?'pending':'pendiente'}`}
+function taskAction(act,id){const t=tasks.find(x=>x.id===id);if(!t)return;if(act==='done')t.done=!t.done;if(act==='miss')t.done=false;if(act==='del')tasks=tasks.filter(x=>x.id!==id);if(act==='move'){const nd=prompt(lang()==='en'?'Move to date YYYY-MM-DD':'Mover a fecha YYYY-MM-DD',t.date);if(nd)t.date=nd}if(act==='edit'){openTask(t)}save();renderAll()}function escapeHtml(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderInspo(){const data={verse:{title:tr('verse'),text:daily(verses)[1],ref:daily(verses)[0]},advice:{title:tr('advice'),text:daily(inspo.advice),ref:'Focusly'},reflection:{title:tr('reflection'),text:daily(inspo.reflection),ref:'Focusly'},focus:{title:tr('focusWeekly'),text:daily(inspo.focus),ref:'Focusly'}};$('inspoGrid').innerHTML=Object.entries(data).map(([k,v])=>`<article class="card inspo-card"><h2>${v.title}</h2><p>${v.text}</p><div class="ref">${v.ref}</div><button class="btn secondary" data-share="${k}">${lang()==='en'?'Preview':'Vista previa'}</button></article>`).join('');qsa('[data-share]').forEach(b=>b.onclick=()=>openShare(b.dataset.share))}
+function openShare(type){const v=daily(verses);const data={verse:{text:v[1],ref:v[0]},advice:{text:daily(inspo.advice),ref:tr('advice')},reflection:{text:daily(inspo.reflection),ref:tr('reflection')},focus:{text:daily(inspo.focus),ref:tr('focusWeekly')}};shareCurrent=data[type];$('quoteBox').innerHTML=`${escapeHtml(shareCurrent.text)}<small>${escapeHtml(shareCurrent.ref)}</small>`;$('shareModal').classList.add('show');drawShare()}
+function drawShare(){const c=$('shareCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,1200,1200);const g=ctx.createLinearGradient(0,0,1200,1200);g.addColorStop(0,'#F7EBD8');g.addColorStop(.45,'#DDEBE6');g.addColorStop(1,'#6F948D');ctx.fillStyle=g;ctx.fillRect(0,0,1200,1200);ctx.globalAlpha=.58;for(const o of [[170,170,190],[980,150,260],[900,890,330],[250,980,240]]){const rg=ctx.createRadialGradient(o[0],o[1],10,o[0],o[1],o[2]);rg.addColorStop(0,'rgba(255,255,255,.72)');rg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=rg;ctx.beginPath();ctx.arc(o[0],o[1],o[2],0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;ctx.fillStyle='rgba(255,253,247,.86)';roundRect(ctx,180,285,840,530,54);ctx.fill();ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#17313A';ctx.textAlign='center';ctx.font='700 58px Manrope';wrap(ctx,(shareCurrent.text||'').replace(/^"+|"+$/g,''),600,435,690,68,true);ctx.font='700 30px Manrope';ctx.fillStyle='#6D7F7D';ctx.fillText(shareCurrent.ref,600,770);ctx.save();ctx.fillStyle='rgba(255,253,247,.38)';roundRect(ctx,505,918,190,58,29);ctx.fill();ctx.strokeStyle='rgba(255,255,255,.46)';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='rgba(23,49,58,.72)';ctx.font='900 30px Manrope';ctx.fillText('Focusly',600,956);ctx.restore();ctx.textAlign='left'}function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}function wrap(ctx,text,x,y,max,line,center=false){let words=String(text).split(' '),l='',lines=[];for(const w of words){let t=l+w+' ';if(ctx.measureText(t).width>max&&l){lines.push(l.trim());l=w+' '}else l=t}if(l.trim())lines.push(l.trim());for(const lineText of lines){ctx.fillText(lineText,center?x:x,y);y+=line}}
+
+function initFirebase(){
+  if(fbReady)return true;
+  if(!window.firebase){console.warn('Firebase SDK no cargó');return false}
+  try{
+    fbApp=firebase.apps.length?firebase.app():firebase.initializeApp(firebaseConfig);
+    fbAuth=firebase.auth();
+    fbDb=firebase.firestore();
+    fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+    fbAuth.onAuthStateChanged(async user=>{
+      fbUser=user||null;
+      updateSyncUi();
+      if(fbUnsub){fbUnsub();fbUnsub=null}
+      if(fbUser){await startCloudSync(fbUser)}
+      else renderSettings();
+    });
+    fbReady=true;
+    return true;
+  }catch(e){console.error('Firebase init error',e);toast(lang()==='en'?'Firebase connection failed':'No se pudo conectar Firebase');return false}
+}
+function cleanStateForCloud(){const copy={...state};delete copy.cloudUpdatedAt;return copy}
+function cloudRef(uid){return fbDb.collection('users').doc(uid)}
+async function startCloudSync(user){
+  if(!fbDb)return;
+  const ref=cloudRef(user.uid);
+  await ref.set({displayName:user.displayName||'',email:user.email||'',photoURL:user.photoURL||'',lastLogin:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  const snap=await ref.get();
+  const data=snap.exists?snap.data():{};
+  const cloud=data.focuslyV1;
+  const localStamp=state.cloudUpdatedAt||0;
+  if(cloud&&cloud.updatedAt&&cloud.updatedAt>localStamp){
+    fbApplyingCloud=true;
+    if(cloud.state)state={...state,...cloud.state,cloudUpdatedAt:cloud.updatedAt};
+    if(Array.isArray(cloud.tasks))tasks=cloud.tasks;
+    store.set('state',state);store.set('tasks',tasks);
+    fbApplyingCloud=false;
+    applyTheme();applyI18n();renderAll();
+    toast(lang()==='en'?'Cloud data loaded':'Datos cargados de la nube');
+  }else{
+    await writeCloudNow();
+  }
+  fbUnsub=ref.onSnapshot(doc=>{
+    if(!doc.exists||fbApplyingCloud)return;
+    const c=(doc.data()||{}).focuslyV1;
+    if(!c||!c.updatedAt||c.updatedAt<=(state.cloudUpdatedAt||0))return;
+    fbApplyingCloud=true;
+    if(c.state)state={...state,...c.state,cloudUpdatedAt:c.updatedAt};
+    if(Array.isArray(c.tasks))tasks=c.tasks;
+    store.set('state',state);store.set('tasks',tasks);
+    fbApplyingCloud=false;
+    applyTheme();applyI18n();renderAll();
+  });
+  updateSyncUi();
+}
+function scheduleCloudSave(){
+  if(fbApplyingCloud||!fbUser||!fbDb)return;
+  clearTimeout(fbSyncTimer);
+  fbSyncTimer=setTimeout(writeCloudNow,800);
+}
+async function writeCloudNow(){
+  if(!fbUser||!fbDb)return;
+  const stamp=Date.now();
+  state.cloudUpdatedAt=stamp;
+  store.set('state',state);store.set('tasks',tasks);
+  try{
+    await cloudRef(fbUser.uid).set({
+      displayName:fbUser.displayName||state.name||'',
+      email:fbUser.email||'',
+      photoURL:fbUser.photoURL||'',
+      focuslyV1:{state:cleanStateForCloud(),tasks,updatedAt:stamp},
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    },{merge:true});
+    updateSyncUi();
+  }catch(e){console.error('Sync error',e);updateSyncUi(lang()==='en'?'Sync failed':'Error al sincronizar')}
+}
+async function handleGoogleSync(){
+  if(!initFirebase())return;
+  if(fbUser){await fbAuth.signOut();toast(lang()==='en'?'Signed out':'Sesión cerrada');return}
+  const provider=new firebase.auth.GoogleAuthProvider();
+  try{
+    await fbAuth.signInWithPopup(provider);
+    toast(lang()==='en'?'Google connected':'Google conectado');
+  }catch(e){
+    console.error(e);
+    const msg=(e&&e.code==='auth/unauthorized-domain')?(lang()==='en'?'Add this domain in Firebase Auth':'Agrega este dominio en Firebase Auth'):(lang()==='en'?'Could not sign in':'No se pudo iniciar sesión');
+    toast(msg);
+  }
+}
+function updateSyncUi(custom){
+  const btn=$('googleBtn'),status=$('syncStatus');
+  if(btn)btn.textContent=fbUser?(lang()==='en'?'Sign out':'Cerrar sesión'):(lang()==='en'?'Continue with Google':'Continuar con Google');
+  if(status)status.textContent=custom||(fbUser?(lang()==='en'?`Synced as ${fbUser.email||fbUser.displayName||'Google'}`:`Sincronizado como ${fbUser.email||fbUser.displayName||'Google'}`):tr('localMode'));
+}
+
+function renderSettings(){$('profileName').textContent=state.name||'Focusly';$('profileMeta').textContent=[state.birth,state.city].filter(Boolean).join(' · ')|| (lang()==='en'?'Personalized experience':'Experiencia personalizada');$('avatar').textContent=(state.name||'F')[0].toUpperCase();$('nameInput').value=state.name||'';$('birthInput').value=state.birth||'';$('cityInput').value=state.city||'';$('notifStatus').textContent=state.notif?(lang()==='en'?'Important notifications enabled.':'Notificaciones importantes activadas.'):(lang()==='en'?'Notifications disabled.':'Notificaciones desactivadas.');$('lightBtn').classList.toggle('active',!state.dark);$('darkBtn').classList.toggle('active',state.dark);if($('settingsLangTitle')){$('settingsLangTitle').textContent=tr('language');$('settingsLangSub').textContent=tr('languageSub');$('settingsLangEs').classList.toggle('active',lang()==='es');$('settingsLangEn').classList.toggle('active',lang()==='en')}$('themeBtns').innerHTML=themes.map(([id,name])=>`<button class="themeBtn ${state.theme===id?'active':''}" data-theme="${id}">${name}<small>${modeName()}</small></button>`).join('');qsa('.themeBtn').forEach(b=>b.onclick=()=>{state.theme=b.dataset.theme;applyTheme();renderSettings()})}
+function renderAll(){renderHome();renderCalendar();renderTasks();renderInspo();renderSettings()}function openScreen(id){qsa('.screen').forEach(s=>s.classList.toggle('active',s.id===id));qsa('.navBtn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));$('drawer').classList.remove('show');renderAll();scrollTo(0,0)}
+function openTask(t=null){$('taskModal').classList.add('show');$('taskTitle').value=t?.title||'';$('taskStart').value=t?.start||'';$('taskEnd').value=t?.end||'';$('taskArea').value=t?.area||'Personal';$('taskPriority').value=t?.priority||'Normal';$('taskNote').value=t?.note||'';$('taskColor').value=t?.color||'#7aa06f';$('taskNotify').value=t?.notify||'none';$('taskSound').value=t?.sound||'soft';$('taskColorLabel').firstChild.textContent=lang()==='en'?'Color':'Color';$('taskNotifyLabel').firstChild.textContent=lang()==='en'?'Reminder':'Recordatorio';$('taskSoundLabel').firstChild.textContent=tr('sound');$('testTaskSound').textContent=tr('testSound');$('saveTask').dataset.edit=t?.id||''}
+function saveTask(){let id=$('saveTask').dataset.edit;let t=id?tasks.find(x=>x.id===id):null;if(!t){t={id:crypto.randomUUID(),date:selectedDate,done:false,color:'#7aa06f'};tasks.push(t)}Object.assign(t,{title:$('taskTitle').value||'Nueva tarea',start:$('taskStart').value,end:$('taskEnd').value,area:$('taskArea').value,priority:$('taskPriority').value,note:$('taskNote').value,color:$('taskColor').value||'#7aa06f',notify:$('taskNotify').value||'none',sound:$('taskSound').value||'soft'});save();$('taskModal').classList.remove('show');renderAll()}
+function setup(){qsa('.navBtn').forEach(b=>b.onclick=()=>openScreen(b.dataset.screen));$('menuBtn').onclick=()=>$('drawer').classList.add('show');$('resetView').onclick=()=>{state.onboard=false;save();$('onboard').classList.add('show');};if($('restartOnboarding'))$('restartOnboarding').onclick=()=>{state.onboard=false;save();$('onboard').classList.add('show');toast(lang()==='en'?'Onboarding restarted':'Experiencia inicial reiniciada')};$('drawer').onclick=e=>{if(e.target.id==='drawer')$('drawer').classList.remove('show')};$('fab').onclick=()=>openTask();$('addForDay').onclick=()=>{openScreen('tasks');openTask()};$('cancelTask').onclick=()=>$('taskModal').classList.remove('show');$('saveTask').onclick=saveTask;$('testTaskSound').onclick=()=>playFocuslySound($('taskSound').value||'soft');$('prevMonth').onclick=()=>{calDate.setMonth(calDate.getMonth()-1);renderCalendar()};$('nextMonth').onclick=()=>{calDate.setMonth(calDate.getMonth()+1);renderCalendar()};$('taskDate').onchange=()=>{selectedDate=$('taskDate').value||today();renderCalendar();renderTasks()};$('prevDay').onclick=()=>{selectedDate=addDays(selectedDate,-1);$('taskDate').value=selectedDate;renderCalendar();renderTasks()};$('nextDay').onclick=()=>{selectedDate=addDays(selectedDate,1);$('taskDate').value=selectedDate;renderCalendar();renderTasks()};$('todayBtn').onclick=()=>{selectedDate=today();$('taskDate').value=selectedDate;renderCalendar();renderTasks()};$('editProfile').onclick=()=>$('profileForm').classList.toggle('hidden');$('saveProfile').onclick=()=>{state.name=$('nameInput').value.trim();state.birth=$('birthInput').value;state.city=$('cityInput').value.trim();save();applyI18n();renderAll();toast(lang()==='en'?'Profile saved':'Perfil guardado')};$('lightBtn').onclick=()=>{state.dark=false;applyTheme();renderSettings()};$('darkBtn').onclick=()=>{state.dark=true;applyTheme();renderSettings()};if($('settingsLangEs')){$('settingsLangEs').onclick=()=>{state.lang='es';save();applyI18n();renderAll()};$('settingsLangEn').onclick=()=>{state.lang='en';save();applyI18n();renderAll()}};$('enableNotif').onclick=async()=>{state.notif=true;if('Notification' in window&&Notification.permission!=='granted')await Notification.requestPermission();save();renderSettings()};$('disableNotif').onclick=()=>{state.notif=false;save();renderSettings()};$('testNotif').onclick=()=>{if('Notification' in window&&Notification.permission==='granted')new Notification('Focusly',{body:lang()==='en'?'This is your reminder.':'Este es tu recordatorio.'});else toast(lang()==='en'?'Notification test':'Prueba de notificación')};$('refreshWeather').onclick=()=>detectLocation(false);$('googleBtn').onclick=handleGoogleSync;$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({state,tasks},null,2)],{type:'application/json'});downloadBlob(blob,'focusly-respaldo.json')};$('closeShare').onclick=()=>$('shareModal').classList.remove('show');$('downloadNow').onclick=()=>{$('shareCanvas').toBlob(b=>downloadBlob(b,'focusly-inspiracion.png'))};$('shareNow').onclick=async()=>{$('shareCanvas').toBlob(async b=>{const f=new File([b],'focusly-inspiracion.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'Focusly'});else downloadBlob(b,'focusly-inspiracion.png')})};window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').style.display='block';document.body.classList.add('install-visible')});$('installBtn').onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;$('installBtn').style.display='none';document.body.classList.remove('install-visible')}};setupOnboard()}
+
+function notifyLabel(v){const m={time:lang()==='en'?'At time':'A la hora','5':lang()==='en'?'5 min before':'5 min antes','10':lang()==='en'?'10 min before':'10 min antes','15':lang()==='en'?'15 min before':'15 min antes','30':lang()==='en'?'30 min before':'30 min antes','60':lang()==='en'?'1 hour before':'1 hora antes'};return m[v]||(lang()==='en'?'No reminder':'Sin recordatorio')}
+function taskReminderTime(t){if(!t.date||!t.start||!t.notify||t.notify==='none')return null;const dt=new Date(t.date+'T'+t.start);if(['5','10','15','30','60'].includes(t.notify))dt.setMinutes(dt.getMinutes()-Number(t.notify));return dt}
+
+function playFocuslySound(type='soft'){try{const AC=window.AudioContext||window.webkitAudioContext;const ctx=new AC();const now=ctx.currentTime;const seq={soft:[523,659],bell:[880,1175],chime:[659,988,1318],sunrise:[392,523,659],harp:[440,554,740]}[type]||[523,659];seq.forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=i%2?'triangle':'sine';o.frequency.setValueAtTime(f,now+i*.12);g.gain.setValueAtTime(.0001,now+i*.12);g.gain.exponentialRampToValueAtTime(.11,now+i*.12+.025);g.gain.exponentialRampToValueAtTime(.0001,now+i*.12+.28);o.connect(g).connect(ctx.destination);o.start(now+i*.12);o.stop(now+i*.12+.32)})}catch(e){}}
+function checkTaskReminders(){if(!state.notif||!('Notification' in window)||Notification.permission!=='granted')return;const now=Date.now();tasks.forEach(t=>{if(t.done)return;const rt=taskReminderTime(t);if(!rt)return;const key=t.id+'_'+t.date+'_'+t.start+'_'+t.notify;if(t.notifiedKey===key)return;if(Math.abs(now-rt.getTime())<35000 || (now>rt.getTime()&&now-rt.getTime()<65000)){new Notification('Focusly',{body:`${t.start||''} · ${t.title||'Tarea'}`});playFocuslySound(t.sound||'soft');t.notifiedKey=key;save();}})}
+setInterval(checkTaskReminders,30000);
+
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+function setupOnboard(){let i=0;const steps=qsa('.step');function paint(){steps.forEach((s,n)=>s.classList.toggle('active',n===i));$('obBack').style.visibility=i?'visible':'hidden';$('obNext').textContent=i===steps.length-1?(lang()==='en'?'Finish':'Finalizar'):tr('continue');$('dots').innerHTML=steps.map((_,n)=>`<span class="${n===i?'active':''}"></span>`).join('');applyI18n()}$('obBack').onclick=()=>{if(i>0)i--;paint()};$('obNext').onclick=()=>{if(i===1)state.name=$('obNameInput').value.trim();if(i===2)state.birth=$('obBirthInput').value;if(i<steps.length-1){i++;paint()}else{state.name=$('obNameInput')?.value.trim()||state.name;state.birth=$('obBirthInput')?.value||state.birth;state.onboard=true;save();$('onboard').classList.remove('show');applyI18n();renderAll();detectLocation(true)}};qsa('[data-lang]').forEach(b=>b.classList.toggle('active',b.dataset.lang===state.lang));qsa('[data-lang]').forEach(b=>b.onclick=()=>{state.lang=b.dataset.lang;qsa('[data-lang]').forEach(x=>x.classList.toggle('active',x===b));save();paint()});$('obLocationBtn').onclick=async()=>{await detectLocation(false);$('obLocationText').textContent=[state.city,state.country].filter(Boolean).join(', ')};$('obNotifyYes').onclick=async()=>{state.notif=true;if('Notification' in window&&Notification.permission!=='granted')await Notification.requestPermission();save();toast(tr('notifications'))};$('obNotifyNo').onclick=()=>{state.notif=false;save()};if(!state.onboard)$('onboard').classList.add('show');paint()}
+function birthdayCheck(){if(state.birth&&state.birth.slice(5)===today().slice(5)){setTimeout(()=>toast((lang()==='en'?'Happy birthday, ':'¡Feliz cumpleaños, ')+(state.name||'')+'! ✨'),700)}}
+if(new URLSearchParams(location.search).has('onboarding')){state.onboard=false;save();}
+initFirebase();setup();applyTheme();applyI18n();selectedDate=today();$('taskDate').value=selectedDate;renderAll();birthdayCheck();setTimeout(()=>detectLocation(true),500);
+</script>
+</body>
+</html>
